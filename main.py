@@ -82,6 +82,11 @@ class Interpreter(object):
             self.pos += 1
             return token
 
+        if current_char == '-':
+            token = Token(MINUS, current_char)
+            self.pos += 1
+            return token
+
         self.error()
 
     def eat(self, token_type):
@@ -105,7 +110,7 @@ class Interpreter(object):
 
         # we expect the current token to be a '+' token
         op = self.current_token
-        self.eat(PLUS)
+        self.eat(op.type)
 
         # we expect the current token to be a single-digit integer
         right = self.current_token
@@ -117,7 +122,10 @@ class Interpreter(object):
         # has been successfully found and the method can just
         # return the result of adding two integers, thus
         # effectively interpreting client input
-        result = left.value + right.value
+        if op.type == PLUS:
+            result = left.value + right.value
+        elif op.type == MINUS:
+            result = left.value - right.value
         return result
 
 
